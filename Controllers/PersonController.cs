@@ -35,7 +35,6 @@ namespace RestAPIcurso.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] Person person)
         {
-
             if (person == null) return BadRequest();
 
             return Ok(_personServices.Create(person));

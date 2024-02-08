@@ -1,66 +1,84 @@
-﻿using RestAPIcurso.Model;
+﻿using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using RestAPIcurso.Model;
+using RestAPIcurso.Model.Context;
+using System;
+using System.Linq.Expressions;
 
 namespace RestAPIcurso.Services.Implementations
 {
     public class PersonServiceImplementation : IPersonServices
     {
         private volatile int count;
-
-        public Person Create(Person person)
+        private MySQLContext _context;
+        public PersonServiceImplementation(MySQLContext context) 
         {
-            return person;
-        }
-
-        public void Delete(long id)
-        {
+            _context = context;
 
         }
-
         public List<Person> FindAll()
         {
-            List<Person> persons = new List<Person>();
-            for (int i = 0; i < 8; i++)
-            {
-                Person person = MorkPerson(i);
-                persons.Add(person);
-            };
-            return persons;
+            return _context.Persons.ToList();
         }
 
         public Person FindById(long id)
         {
-            return new Person
-            {
-                Id = IncrementAndGet(),
-                FirstName = "Test",
-                LastName = "Test",
-                Email = "teste@gmail.com",
-                Gender = "Male",
-                Name = "Teste"
-            };
+            return _context.Persons.SingleOrDefault(p => p.Id.Equals(id));
         }
 
-        public Person Update(Person person)
+        public Person Create(Person person)
         {
+            try
+            {
+                _context.Add(person);
+                _context.SaveChanges();
+            }
+            catch (Exception) 
+            {
+                throw;
+            }
 
             return person;
         }
-        private Person MorkPerson(int i)
+        public Person Update(Person person)
         {
-            return new Person
-            {
-                Id = IncrementAndGet(),
-                FirstName = "Person FistName" + i,
-                LastName = "Person LastName" + i,
-                Email = "Email@gmail.com" + i,
-                Gender = "gender" + i,
-                Name = "Name" + i
-            };
-        }
+            if (!Exists(person.Id)) return new Person();
 
-        private long IncrementAndGet()
+            var result = _context.Persons.SingleOrDefault(p => p.Id.Equals(person.Id));
+            if (result != null)
+            {
+                try
+                {
+                    _context.Entry(result).CurrentValues.SetValues(person);
+                    _context.SaveChanges();
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+            
+
+            return person;
+        }
+        public void Delete(long id)
         {
-            return Interlocked.Increment(ref count);
+            var result = _context.Persons.SingleOrDefault(p => p.Id.Equals(id));
+            if (result != null)
+            {
+                try
+                {
+                    _context.Persons.Remove(result);
+                    _context.SaveChanges();
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+        }
+        private bool Exists(long id)
+        {
+            return _context.Persons.Any(p => p.Id.Equals(id));
         }
     }
 }
