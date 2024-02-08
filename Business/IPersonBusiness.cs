@@ -1,8 +1,8 @@
 ﻿using RestAPIcurso.Model;
 
-namespace RestAPIcurso.Services
+namespace RestAPIcurso.Business
 {
-    public interface IPersonServices
+    public interface IPersonBusiness
     {
         Person Create(Person person);
         Person FindById(long id);

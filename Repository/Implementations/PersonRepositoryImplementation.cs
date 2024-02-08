@@ -1,17 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
-using RestAPIcurso.Model;
+﻿using RestAPIcurso.Model;
 using RestAPIcurso.Model.Context;
-using System;
-using System.Linq.Expressions;
 
-namespace RestAPIcurso.Services.Implementations
+namespace RestAPIcurso.Repository.Implementations
 {
-    public class PersonServiceImplementation : IPersonServices
+    public class PersonRepositoryImplementation : IPersonRepository
     {
         private volatile int count;
         private MySQLContext _context;
 
-        public PersonServiceImplementation(MySQLContext context) 
+        public PersonRepositoryImplementation(MySQLContext context) 
         {
             _context = context;
 
@@ -43,7 +40,7 @@ namespace RestAPIcurso.Services.Implementations
 
         public Person Update(Person person)
         {
-            if (!Exists(person.Id)) return new Person();
+            if (!Exists(person.Id)) return null;
 
             var result = _context.Persons.SingleOrDefault(p => p.Id.Equals(person.Id));
             if (result != null)
@@ -77,7 +74,7 @@ namespace RestAPIcurso.Services.Implementations
                 }
             }
         }
-        private bool Exists(long id)
+        public bool Exists(long id)
         {
             return _context.Persons.Any(p => p.Id.Equals(id));
         }

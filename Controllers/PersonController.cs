@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using RestAPIcurso.Business;
 using RestAPIcurso.Model;
-using RestAPIcurso.Services;
 
 namespace RestAPIcurso.Controllers
 {
@@ -10,23 +10,23 @@ namespace RestAPIcurso.Controllers
     public class PersonController : ControllerBase
     {
         private readonly ILogger<PersonController> _logger;
-        private IPersonServices _personServices;
-        public PersonController(ILogger<PersonController> logger, IPersonServices personServices)
+        private IPersonBusiness _personBusiness;
+        public PersonController(ILogger<PersonController> logger, IPersonBusiness personBusiness)
         {
             _logger = logger;
-            _personServices = personServices;
+            _personBusiness = personBusiness;
         }
 
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(_personServices.FindAll());
+            return Ok(_personBusiness.FindAll());
         }
 
         [HttpGet("{id}")]
         public IActionResult Get(long id)
         {
-            var person = _personServices.FindById(id);
+            var person = _personBusiness.FindById(id);
 
             if (person == null) return NotFound();
 
@@ -38,7 +38,7 @@ namespace RestAPIcurso.Controllers
         {
             if (person == null) return BadRequest();
 
-            return Ok(_personServices.Create(person));
+            return Ok(_personBusiness.Create(person));
         }
 
 
@@ -48,13 +48,13 @@ namespace RestAPIcurso.Controllers
 
             if (person == null) return BadRequest();
 
-            return Ok(_personServices.Update(person));
+            return Ok(_personBusiness.Update(person));
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(long id)
         {
-            _personServices.Delete(id);
+            _personBusiness.Delete(id);
 
             return NoContent();
         }
