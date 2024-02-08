@@ -15,6 +15,7 @@ builder.Services.AddDbContext<MySQLContext>(options => options.UseMySql(
 
 builder.Services.AddControllers();
 
+builder.Services.AddApiVersioning();
 
 builder.Services.AddScoped<IPersonServices, PersonServiceImplementation>();
 

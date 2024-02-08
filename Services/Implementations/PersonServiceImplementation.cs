@@ -10,6 +10,7 @@ namespace RestAPIcurso.Services.Implementations
     {
         private volatile int count;
         private MySQLContext _context;
+
         public PersonServiceImplementation(MySQLContext context) 
         {
             _context = context;
@@ -39,6 +40,7 @@ namespace RestAPIcurso.Services.Implementations
 
             return person;
         }
+
         public Person Update(Person person)
         {
             if (!Exists(person.Id)) return new Person();
@@ -56,7 +58,6 @@ namespace RestAPIcurso.Services.Implementations
                     throw;
                 }
             }
-            
 
             return person;
         }
