@@ -1,17 +1,39 @@
 import React from 'react';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
+import './Custom.css';
+import LoginForm from './Components/LoginForm';
+import logo from './Logo.png';
+
+
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+  <React.StrictMode>
+    <Container>
+      <Row className="vh-100 d-flex align-items-center justify-content-center">
+          <Col xs={6} className='form-Login'>
+            <Row className="justify-content-center">
+              <Col xs={12} sm={4} md={10} lg={10} className="text-center">
+                  <img src={logo} alt="logo"/>
+              </Col>
+            </Row>
+
+            <Row className="justify-content-center">
+                <Col xs={12} sm={4} md={10} lg={10} >
+                  <LoginForm />
+                </Col>
+                
+            </Row>
+          </Col>
+        </Row>
+    </Container>  
+  </React.StrictMode>
+
+);
 reportWebVitals();
