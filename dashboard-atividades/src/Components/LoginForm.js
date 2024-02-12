@@ -18,7 +18,7 @@ function LoginForm() {
       <Form.Control type="password" className='custom_Input' placeholder="Senha" />
     </Form.Group>
     <div class="text-center">
-      <Button variant="primary" type="submit" className='Custom_btn' to='./Components/Dashbord'>
+      <Button variant="primary" type="submit" className='Custom_btn'>
         Login
       </Button>
     </div>
