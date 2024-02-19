@@ -1,13 +1,14 @@
-﻿using RestAPIcurso.Model;
+﻿using RestAPIcurso.Data.DM;
+using RestAPIcurso.Model;
 
 namespace RestAPIcurso.Business
 {
     public interface IPersonBusiness
     {
-        Person Create(Person person);
-        Person FindById(long id);
-        List<Person> FindAll();
-        Person Update(Person person);
+        PersonDM Create(PersonDM person);
+        PersonDM FindById(long id);
+        List<PersonDM> FindAll();
+        PersonDM Update(PersonDM person);
         void Delete(long id);
     }
 }

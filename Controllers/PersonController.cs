@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RestAPIcurso.Business;
+using RestAPIcurso.Data.DM;
+using RestAPIcurso.Hypermedia.Filters;
 using RestAPIcurso.Model;
 
 namespace RestAPIcurso.Controllers
@@ -18,12 +20,14 @@ namespace RestAPIcurso.Controllers
         }
 
         [HttpGet]
+        [TypeFilter(typeof(HyperMediaFilter))]
         public IActionResult Get()
         {
             return Ok(_personBusiness.FindAll());
         }
 
         [HttpGet("{id}")]
+        [TypeFilter(typeof(HyperMediaFilter))]
         public IActionResult Get(long id)
         {
             var person = _personBusiness.FindById(id);
@@ -34,7 +38,8 @@ namespace RestAPIcurso.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Person person)
+        [TypeFilter(typeof(HyperMediaFilter))]
+        public IActionResult Post([FromBody] PersonDM person)
         {
             if (person == null) return BadRequest();
 
@@ -43,7 +48,8 @@ namespace RestAPIcurso.Controllers
 
 
         [HttpPut]
-        public IActionResult Put([FromBody] Person person)
+        [TypeFilter(typeof(HyperMediaFilter))]
+        public IActionResult Put([FromBody] PersonDM person)
         {
 
             if (person == null) return BadRequest();

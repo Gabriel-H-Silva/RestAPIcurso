@@ -1,31 +1,30 @@
-using EvolveDb;
 using Microsoft.EntityFrameworkCore;
-using MySqlConnector;
 using RestAPIcurso.Business;
 using RestAPIcurso.Business.Implementations;
+using RestAPIcurso.Hypermedia.Enricher;
+using RestAPIcurso.Hypermedia.Filters;
 using RestAPIcurso.Model.Context;
 using RestAPIcurso.Repository;
-using RestAPIcurso.Repository.Implementations;
-using Serilog;
+using RestAPIcurso.Repository.Generic;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var connection = builder.Configuration["MySQLConnection:MySQLConnectionString"];
 builder.Services.AddDbContext<MySQLContext>(options => options.UseMySql(connection, new MySqlServerVersion(new Version(8, 0, 29))));
 
-    if (builder.Environment.IsDevelopment())
-    {
-        MigrateDatabase(connection);
-    }
-
 // Add services to the container.
+var filterOptions = new HyperMediaFilterOptions();
+filterOptions.ContentResponseEnricherList.Add(new PersonEnricher());
+
+builder.Services.AddSingleton(filterOptions);
 
 builder.Services.AddControllers();
 
 builder.Services.AddApiVersioning();
 
+builder.Services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IPersonBusiness, PersonBusinessImplementation>();
-builder.Services.AddScoped<IPersonRepository, PersonRepositoryImplementation>();
+
 
 var app = builder.Build();
 
@@ -36,24 +35,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapControllerRoute("DefaultApi", "{controller=values}/v{version=apiVersion}/{id?}");
 
 app.Run();
 
-void MigrateDatabase(string connection)
-{
-    try
-    {
-        var evolveConnection = new MySqlConnection(connection);
-        var evolve = new Evolve(evolveConnection, Log.Information)
-        {
-            Locations = new List<string> { "db/migrations", "db/dataset" },
-            IsEraseDisabled = true,
-        };
-        evolve.Migrate();
-    }
-    catch (Exception ex)
-    {
-        Log.Error("Database migration failed", ex);
-        throw;
-    }
-}

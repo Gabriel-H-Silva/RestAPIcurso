@@ -1,26 +1,19 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using RestAPIcurso.Model.Base;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RestAPIcurso.Model
 {
     [Table("users")]
-    public class Person
+    public class Person : BaseEntity
     {
-        [Column("id")]
-        public long Id { get; set; }
-
         [Column("name")]
-        public string? Name { get; set; }
+        public string? name { get; set; }
 
-        [Column("firstname")]
-        public string? FirstName { get; set; }
+        [Column("office")]
+        public string? office { get; set; }
 
-        [Column("lastname")]
-        public string? LastName { get; set; }
+        [Column("password")]
+        public string? password { get; set; }
 
-        [Column("email")]
-        public string? Email { get; set; }
-
-        [Column("gender")]
-        public string? Gender { get; set; }
     }
 }

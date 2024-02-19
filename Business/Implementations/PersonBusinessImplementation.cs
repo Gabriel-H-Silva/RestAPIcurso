@@ -1,37 +1,42 @@
-﻿using RestAPIcurso.Model;
-using RestAPIcurso.Model.Context;
+﻿using RestAPIcurso.Data.Converter.Implementations;
+using RestAPIcurso.Data.DM;
+using RestAPIcurso.Model;
 using RestAPIcurso.Repository;
-using System;
 
 namespace RestAPIcurso.Business.Implementations
 {
     public class PersonBusinessImplementation : IPersonBusiness
     {
-        private readonly IPersonRepository _repository;
+        private readonly IRepository<Person> _repository;
 
-        public PersonBusinessImplementation(IPersonRepository repository) 
+        private readonly PersonConverter _converter;
+        public PersonBusinessImplementation(IRepository<Person> repository) 
         {
             _repository = repository;
-
+            _converter = new PersonConverter();
         }
-        public List<Person> FindAll()
+        public List<PersonDM> FindAll()
         {
-            return _repository.FindAll();
-        }
-
-        public Person FindById(long id)
-        {
-            return _repository.FindById(id);
+            return _converter.Parse(_repository.FindAll());
         }
 
-        public Person Create(Person person)
+        public PersonDM FindById(long id)
         {
-            return _repository.Create(person);
+            return _converter.Parse(_repository.FindById(id));
         }
 
-        public Person Update(Person person)
+        public PersonDM Create(PersonDM person)
         {
-            return _repository.Update(person);
+            var personEntity = _converter.Parse(person);
+            personEntity = _repository.Create(personEntity);
+            return _converter.Parse(personEntity);
+        }
+
+        public PersonDM Update(PersonDM person)
+        {
+            var personEntity = _converter.Parse(person);
+            personEntity = _repository.Update(personEntity);
+            return _converter.Parse(personEntity);
         }
         public void Delete(long id)
         {
